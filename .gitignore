@@ -24,3 +24,6 @@ yarn-error.log*
 output/
 postman/
 uploads/
+
+# logs
+logs.json
