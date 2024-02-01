@@ -1,4 +1,4 @@
-### Start the project:
+### Запустить проект:
 ```
 npm start
 ```
@@ -8,7 +8,15 @@ npm start
 <b>Key</b>: file
 
 ### 4 варианта проверки
-- zip-архив, содержащий index.html и ресурсы к нему (изображения, css)
-- файл не является zip-архивом (проверка на корректную работу)
-- архив не содержит index.html (проверка на корректную работу)
-- архив более 2GB (проверка на корректную работу)
+- success: zip-архив, содержащий index.html и ресурсы к нему (изображения, css)
+- error: файл не является zip-архивом
+- error: архив не содержит index.html
+- error: архив более 2GB
+
+### Docker
+```
+docker build . -t your-dockerhub-name/html-to-pdf
+```
+```
+docker run -p 5000:8080  your-dockerhub-name/html-to-pdf
+```
