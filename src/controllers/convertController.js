@@ -13,6 +13,37 @@ const MAX_SIZE = 2 * GIGABYTE;
 const FILE_TYPE = "zip";
 
 export const handleConversion = async (req, res, next) => {
+    /* 	
+        #swagger.tags = ['Convert']
+        #swagger.description = 'Конвертировать HTML в PDF' 
+    */
+
+    /*	
+        #swagger.parameters['singleFile'] = {
+            in: 'formData',
+            type: 'file',
+            name: 'file',
+            description: 'zip-архив, содержащий index.html'
+        } 
+    */
+
+    /*
+        #swagger.responses[200] = {
+            description: "Конвертация завершена успешно",
+            content: {
+                'application/pdf': {
+                    schema: {
+                        type: 'file',
+                        format: 'binary',
+                    }
+                }
+            }
+        }
+        #swagger.responses[400] = {
+            description: "• Загрузите файл с раширением .zip\n • Размер файла должен быть менее 2Гб\n • Загрузите архив\n • Архив должен содержать файл index.html\n • Что-то пошло не так..."
+        }
+    */
+
     const convertStart = Date.now();
     const upload = multer({
         storage: multer.diskStorage({
@@ -30,11 +61,7 @@ export const handleConversion = async (req, res, next) => {
                 path.extname(file.originalname) === `.${FILE_TYPE}`;
             if (extension) {
                 const filteringTime = countExecutionTime(startfileFilter);
-                addLog(
-                    "fileFilter",
-                    "Расширение соответствует",
-                    filteringTime
-                );
+                addLog("fileFilter", "Расширение соответствует", filteringTime);
                 return cb(null, true);
             } else {
                 const filteringTime = countExecutionTime(startfileFilter);
@@ -61,7 +88,7 @@ export const handleConversion = async (req, res, next) => {
         if (err) {
             const uploadingTime = countExecutionTime(startUpload);
             addLog("upload", err.message, uploadingTime);
-            return res.status(403).send(err.message);
+            return res.status(400).send(err.message);
         }
         const zipArch = req.file;
         if (!zipArch) {
@@ -103,6 +130,8 @@ export const handleConversion = async (req, res, next) => {
         const pdfName = path.parse(zipArch.originalname).name + ".pdf";
         fs.writeFileSync(`${EXTRACT_PATH}/${pdfName}`, pdf);
 
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", `attachment; filename=${pdfName}`);
         res.contentType("application/pdf");
         res.status(200).send(pdf);
 

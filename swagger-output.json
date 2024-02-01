@@ -1,0 +1,56 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Convert HTML to PDF",
+    "description": "Микросервис конвертирования HTML-файлов в PDF",
+    "version": "1.0.0"
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/zip"
+  ],
+  "produces": [
+    "application/pdf"
+  ],
+  "paths": {
+    "/html-to-pdf": {
+      "post": {
+        "tags": [
+          "Convert"
+        ],
+        "description": "Конвертировать HTML в PDF",
+        "produces": [
+          "application/pdf"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "description": "zip-архив, содержащий index.html"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Конвертация завершена успешно",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "file",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "• Загрузите файл с раширением .zip\n • Размер файла должен быть менее 2Гб\n • Загрузите архив\n • Архив должен содержать файл index.html\n • Что-то пошло не так..."
+          }
+        }
+      }
+    }
+  }
+}
