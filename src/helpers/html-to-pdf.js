@@ -1,8 +1,8 @@
 import puppeteer from "puppeteer";
 import path from "path";
+import url from "url";
 import addLog from "../utils/addLog.js";
 import countExecutionTime from "../utils/countExecutionTime.js";
-import findHtml from "../utils/findHtml.js";
 
 const defaultOptions = {
     format: "A4",
@@ -18,16 +18,18 @@ async function htmlToPdf(html, options = defaultOptions) {
         const page = await browser.newPage();
 
         const absolutePath = path.resolve(html).replace(/\\/g, "/");
+        const pathToUrl = url.pathToFileURL(absolutePath).href;
         page.setJavaScriptEnabled(false);
-        await page.goto(absolutePath, {
+        await page.goto(pathToUrl, {
             waitUntil: "networkidle0",
         });
         await page.emulateMediaType("screen");
         const pdfBuffer = await page.pdf(options);
-        message = "Успешно. Сервер вернул файл после конвертации.";
+        message = "Успешно. Сервер вернул файл после конвертации";
+        await page.close();
         return pdfBuffer;
     } catch (err) {
-        message = `Ошибка конвертации: ${err.message}.  `;
+        message = `Ошибка конвертации: ${err.message}`;
     } finally {
         const executionTime = countExecutionTime(start);
         addLog("htmlToPdf", message, executionTime);

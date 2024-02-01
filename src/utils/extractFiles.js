@@ -9,7 +9,7 @@ function extractFiles(zipPath, outputPath) {
     const start = Date.now();
     let message = "";
     if (!zipPath) {
-        addLog("extractFiles", "Путь не найден.");
+        addLog("extractFiles", "Путь не найден");
         return;
     }
     const pathObj = path.parse(zipPath);

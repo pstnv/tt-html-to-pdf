@@ -32,13 +32,13 @@ export const handleConversion = async (req, res, next) => {
                 const filteringTime = countExecutionTime(startfileFilter);
                 addLog(
                     "fileFilter",
-                    "Расширение соответствует.",
+                    "Расширение соответствует",
                     filteringTime
                 );
                 return cb(null, true);
             } else {
                 const filteringTime = countExecutionTime(startfileFilter);
-                const message = `Загрузите файл с раширением .${FILE_TYPE}.`;
+                const message = `Загрузите файл с раширением .${FILE_TYPE}`;
                 addLog("fileFilter", message, filteringTime);
                 cb(
                     {
@@ -66,8 +66,8 @@ export const handleConversion = async (req, res, next) => {
         const zipArch = req.file;
         if (!zipArch) {
             const uploadingTime = countExecutionTime(startUpload);
-            addLog("upload", "400 Error. Загрузите архив.", uploadingTime);
-            return res.status(400).send("Загрузите архив.");
+            addLog("upload", "400 Error. Загрузите архив", uploadingTime);
+            return res.status(400).send("Загрузите архив");
         } else {
             const uploadingTime = countExecutionTime(startUpload);
             addLog(
@@ -79,7 +79,7 @@ export const handleConversion = async (req, res, next) => {
         const zipPath = zipArch.path;
         const extractedFilesFolder = extractFiles(zipPath, EXTRACT_PATH);
         if (!extractedFilesFolder) {
-            addLog("upload", "Файлы не найдены.");
+            addLog("upload", "Файлы не найдены");
             return;
         }
         const html = findHtml(extractedFilesFolder);
@@ -87,12 +87,12 @@ export const handleConversion = async (req, res, next) => {
             const convertStop = countExecutionTime(convertStart);
             addLog(
                 "upload",
-                "Архив должен содержать файл index.html.",
+                "Архив должен содержать файл index.html",
                 convertStop
             );
             return res
                 .status(400)
-                .send("Архив должен содержать файл index.html.");
+                .send("Архив должен содержать файл index.html");
         }
         const pdf = await htmlToPdf(html);
         if (!pdf) {

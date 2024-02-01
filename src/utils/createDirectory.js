@@ -8,7 +8,7 @@ function createDirectory(path) {
         const createTime = countExecutionTime(start);
         addLog(
             "createDirectory",
-            `Папка существует. Путь: ${path}.`,
+            `Папка существует. Путь: ${path}`,
             createTime
         );
         return;
@@ -20,6 +20,9 @@ function createDirectory(path) {
             : `Папка создана. Путь: ${path}`;
         const createTime = countExecutionTime(start);
         addLog("createDirectory", message, createTime);
+        if (err) {
+            throw err;
+        }
     });
 }
 
