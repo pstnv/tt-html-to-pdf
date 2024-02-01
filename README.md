@@ -13,6 +13,18 @@ npm start
 - error: архив не содержит index.html
 - error: архив более 2GB
 
+### Swagger
+```
+npm run swagger
+```
+```
+npm start
+```
+```
+localhost:5000/docs
+```
+
+
 ### Docker
 ```
 docker build . -t your-dockerhub-name/html-to-pdf
