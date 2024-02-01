@@ -1,0 +1,65 @@
+[
+  {
+    "functionName": "createDirectory",
+    "timestamp": "2024-02-01T06:17:39.686Z",
+    "logText": "Папка существует. Путь: ./uploads.",
+    "memory": "25.53MB",
+    "executionTime": 0
+  },
+  {
+    "functionName": "createDirectory",
+    "timestamp": "2024-02-01T06:17:39.687Z",
+    "logText": "Папка существует. Путь: ./output.",
+    "memory": "25.55MB",
+    "executionTime": 0
+  },
+  {
+    "functionName": "fileFilter",
+    "timestamp": "2024-02-01T06:17:39.690Z",
+    "logText": "Расширение соответствует.",
+    "memory": "25.60MB",
+    "executionTime": 0
+  },
+  {
+    "functionName": "upload",
+    "timestamp": "2024-02-01T06:17:39.768Z",
+    "logText": "Архив загружен в папку ./uploads",
+    "memory": "19.10MB",
+    "executionTime": 0
+  },
+  {
+    "functionName": "extractFiles",
+    "timestamp": "2024-02-01T06:17:40.053Z",
+    "logText": "Файлы извлечены успешно",
+    "memory": "19.93MB",
+    "executionTime": 284
+  },
+  {
+    "functionName": "findHtml",
+    "timestamp": "2024-02-01T06:17:40.063Z",
+    "logText": "Файл index.html найден",
+    "memory": "18.72MB",
+    "executionTime": 9
+  },
+  {
+    "functionName": "createDirectory",
+    "timestamp": "2024-02-01T06:17:40.066Z",
+    "logText": "Папка создана. Путь: ./output/success.arch2",
+    "memory": "18.76MB",
+    "executionTime": 290
+  },
+  {
+    "functionName": "htmlToPdf",
+    "timestamp": "2024-02-01T06:17:52.756Z",
+    "logText": "Успешно. Сервер вернул файл после конвертации.",
+    "memory": "21.86MB",
+    "executionTime": 12692
+  },
+  {
+    "functionName": "handleConversion",
+    "timestamp": "2024-02-01T06:17:52.792Z",
+    "logText": "Конвертация завершена успешно",
+    "memory": "21.93MB",
+    "executionTime": 13103
+  }
+]

@@ -2,8 +2,12 @@ import AdmZip from "adm-zip";
 import path from "path";
 import createDirectory from "./createDirectory.js";
 import addLog from "./addLog.js";
+import countExecutionTime from "./countExecutionTime.js";
+import { count } from "console";
 
 function extractFiles(zipPath, outputPath) {
+    const start = Date.now();
+    let message = "";
     if (!zipPath) {
         addLog("extractFiles", "Путь не найден.");
         return;
@@ -15,17 +19,16 @@ function extractFiles(zipPath, outputPath) {
     const outputFolder = `${outputPath}/${pathObj.name}`;
 
     try {
-        const start = Date.now();
         const zip = new AdmZip(zipPath);
         createDirectory(outputFolder);
         zip.extractAllTo(outputFolder, true);
-        const end = Date.now();
-        const executionTime = end - start;
-        addLog("extractFiles", "Файлы извлечены успешно.", executionTime);
+        message = "Файлы извлечены успешно";
         return outputFolder;
     } catch (err) {
-        addLog("extractFiles", `Error: ${err}`);
-        // console.log(`Error: ${err}`);
+        message = `Error: ${err.message}`;
+    } finally {
+        const executionTime = countExecutionTime(start);
+        addLog("extractFiles", message, executionTime);
     }
 }
 

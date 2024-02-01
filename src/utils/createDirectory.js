@@ -1,18 +1,25 @@
 import fs from "fs";
 import addLog from "./addLog.js";
+import countExecutionTime from "./countExecutionTime.js";
 
 function createDirectory(path) {
+    const start = Date.now();
     if (fs.existsSync(path)) {
-        addLog("createDirectory", `Папка существует. Путь: ${path}.`);
+        const createTime = countExecutionTime(start);
+        addLog(
+            "createDirectory",
+            `Папка существует. Путь: ${path}.`,
+            createTime
+        );
         return;
     }
+    let message = "";
     fs.mkdir(path, { recursive: true }, (err) => {
-        if (err) {
-            addLog("createDirectory", `Error: ${err.message}, ${err.code}`);
-            // console.log(err);
-        } else {
-            addLog("createDirectory", `Папка создана. Путь: ${path}.`);
-        }
+        message = err
+            ? `Error: ${err.message}`
+            : `Папка создана. Путь: ${path}`;
+        const createTime = countExecutionTime(start);
+        addLog("createDirectory", message, createTime);
     });
 }
 

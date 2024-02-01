@@ -5,6 +5,7 @@ import extractFiles from "../utils/extractFiles.js";
 import htmlToPdf from "../helpers/html-to-pdf.js";
 import findHtml from "../utils/findHtml.js";
 import addLog from "../utils/addLog.js";
+import countExecutionTime from "../utils/countExecutionTime.js";
 import { DESTINATION_PATH, EXTRACT_PATH } from "../expressServer.js";
 
 const GIGABYTE = Math.pow(1024, 3);
@@ -28,17 +29,17 @@ export const handleConversion = async (req, res, next) => {
             const extension =
                 path.extname(file.originalname) === `.${FILE_TYPE}`;
             if (extension) {
-                let endfileFilter = Date.now();
+                const filteringTime = countExecutionTime(startfileFilter);
                 addLog(
                     "fileFilter",
                     "Расширение соответствует.",
-                    endfileFilter - startfileFilter
+                    filteringTime
                 );
                 return cb(null, true);
             } else {
-                let endfileFilter = Date.now();
+                const filteringTime = countExecutionTime(startfileFilter);
                 const message = `Загрузите файл с раширением .${FILE_TYPE}.`;
-                addLog("fileFilter", message, endfileFilter - startfileFilter);
+                addLog("fileFilter", message, filteringTime);
                 cb(
                     {
                         name: "FILE_TYPE",
@@ -51,48 +52,52 @@ export const handleConversion = async (req, res, next) => {
     }).single("file");
 
     upload(req, res, async function (err) {
-        const startupload = Date.now();
+        const startUpload = Date.now();
         if (err?.code === "LIMIT_FILE_SIZE") {
             err.message = `Размер файла должен быть менее ${
                 MAX_SIZE / GIGABYTE
             }Гб.`;
         }
         if (err) {
-            let endupload = Date.now();
-            addLog("upload", err.message, endupload - startupload);
-            // console.log(err.message);
+            const uploadingTime = countExecutionTime(startUpload);
+            addLog("upload", err.message, uploadingTime);
             return res.status(403).send(err.message);
         }
         const zipArch = req.file;
         if (!zipArch) {
-            // console.log(`Загрузите архив.`);
-            addLog("zipArch", "400 Error. Загрузите архив.");
+            const uploadingTime = countExecutionTime(startUpload);
+            addLog("upload", "400 Error. Загрузите архив.", uploadingTime);
             return res.status(400).send("Загрузите архив.");
         } else {
-            let endupload = Date.now();
+            const uploadingTime = countExecutionTime(startUpload);
             addLog(
                 "upload",
                 `Архив загружен в папку ${DESTINATION_PATH}`,
-                endupload - startupload
+                uploadingTime
             );
         }
         const zipPath = zipArch.path;
         const extractedFilesFolder = extractFiles(zipPath, EXTRACT_PATH);
         if (!extractedFilesFolder) {
-            addLog("extractedFilesFolder", "Файлы не найдены.");
+            addLog("upload", "Файлы не найдены.");
             return;
         }
         const html = findHtml(extractedFilesFolder);
         if (!html) {
-            addLog("html", "Архив должен содержать файл index.html.");
-            // console.log("Архив должен содержать файл index.html.");
+            const convertStop = countExecutionTime(convertStart);
+            addLog(
+                "upload",
+                "Архив должен содержать файл index.html.",
+                convertStop
+            );
             return res
                 .status(400)
                 .send("Архив должен содержать файл index.html.");
         }
         const pdf = await htmlToPdf(html);
         if (!pdf) {
-            addLog("pdf", "Что-то пошло не так...");
+            const convertStop = countExecutionTime(convertStart);
+            addLog("handleConversion", "Что-то пошло не так...", convertStop);
             return res.status(400).send("Что-то пошло не так...");
         }
         const pdfName = path.parse(zipArch.originalname).name + ".pdf";
@@ -100,8 +105,8 @@ export const handleConversion = async (req, res, next) => {
 
         res.contentType("application/pdf");
         res.status(200).send(pdf);
-        const convertEnd = Date.now();
-        const finalExecutionTime = convertEnd - convertStart;
+
+        const finalExecutionTime = countExecutionTime(convertStart);
         addLog(
             "handleConversion",
             "Конвертация завершена успешно",

@@ -1,22 +1,26 @@
 import { globSync } from "glob";
 import addLog from "./addLog.js";
+import countExecutionTime from "./countExecutionTime.js";
 
 const fileName = "index.html";
 
 function findHtml(folder) {
     const start = Date.now();
+    let message = '';
+    
     const pathNormalize = (str) => str.replace(/\\/g, "/");
 
     let [html] = globSync(`${folder}/**/${fileName}`);
-    if (!html) {
-        addLog("findHtml", "Файл index.html не найден.");
-        return;
+    try {
+        html = pathNormalize(html);
+        message = 'Файл index.html найден';
+        return html;      
+    } catch (err) {
+        message = `Файл index.html не найден`;
+    } finally {
+        const executionTime = countExecutionTime(start);
+        addLog("findHtml", message, executionTime);
     }
-    html = pathNormalize(html);
-    const end = Date.now();
-    const executionTime = end - start;
-    addLog("findHtml", "Файл index.html найден.", executionTime);
-    return html;
 }
 
 export default findHtml;

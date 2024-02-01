@@ -1,6 +1,8 @@
 import puppeteer from "puppeteer";
 import path from "path";
 import addLog from "../utils/addLog.js";
+import countExecutionTime from "../utils/countExecutionTime.js";
+import findHtml from "../utils/findHtml.js";
 
 const defaultOptions = {
     format: "A4",
@@ -10,6 +12,7 @@ const defaultOptions = {
 
 async function htmlToPdf(html, options = defaultOptions) {
     const start = Date.now();
+    let message = "";
     try {
         const browser = await puppeteer.launch({ headless: "new" });
         const page = await browser.newPage();
@@ -21,20 +24,13 @@ async function htmlToPdf(html, options = defaultOptions) {
         });
         await page.emulateMediaType("screen");
         const pdfBuffer = await page.pdf(options);
-        const end = Date.now();
-        const executionTime = end - start;
-        addLog(
-            "htmlToPdf",
-            "Успешно. Сервер вернул файл после конвертации.",
-            executionTime
-        );
+        message = "Успешно. Сервер вернул файл после конвертации.";
         return pdfBuffer;
     } catch (err) {
-        addLog(
-            "htmlToPdf",
-            `Ошибка конвертации: ${err.message}.  `,
-            executionTime
-        );
+        message = `Ошибка конвертации: ${err.message}.  `;
+    } finally {
+        const executionTime = countExecutionTime(start);
+        addLog("htmlToPdf", message, executionTime);
     }
 }
 
