@@ -1,7 +1,6 @@
 import fs from "fs";
 
 const LOGFILE = "./logs.json";
-
 function addLog(functionName, logText, executionTime = null) {
     let logEntries = [];
     if (fs.existsSync(LOGFILE)) {
@@ -12,12 +11,6 @@ function addLog(functionName, logText, executionTime = null) {
             console.error("Ошибка записи лога", error);
         }
     }
-    try {
-        const content = fs.readFileSync(LOGFILE, "utf8");
-        logEntries = content ? JSON.parse(fs.readFileSync(LOGFILE)) : [];
-    } catch (error) {
-        console.error("Ошибка записи лога", error);
-    }
     const logData = {
         functionName,
         timestamp: new Date().toISOString(),
@@ -25,7 +18,7 @@ function addLog(functionName, logText, executionTime = null) {
         memory: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(
             2
         )}MB`,
-        executionTime,
+        executionTime: `${executionTime}ms`,
     };
     logEntries.push(logData);
     try {
